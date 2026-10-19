@@ -74,6 +74,7 @@ class SampleContentSeeder extends Seeder
                 'quantity' => 250,
                 'unit' => 'seedlings',
                 'price' => 150,
+                'negotiable' => false,
                 'image' => 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1200&q=80',
             ],
             [
@@ -162,7 +163,7 @@ class SampleContentSeeder extends Seeder
                     'unit' => $sampleListing['unit'],
                     'price' => $sampleListing['price'],
                     'currency' => 'ZMW',
-                    'negotiable' => true,
+                    'negotiable' => $sampleListing['negotiable'] ?? true,
                     'country_id' => $country->id,
                     'status' => 'approved',
                     'availability' => 'available',

@@ -31,6 +31,7 @@ class AdminDashboardController extends Controller
                 + (Schema::hasTable('buyer_requests') ? BuyerRequest::where('status', 'pending_review')->count() : 0)
             ),
             'reports' => Schema::hasTable('reports') ? Report::where('status', 'pending')->count() : 0,
+            'verifiedSellers' => Schema::hasTable('users') ? User::whereNotNull('seller_verified_at')->count() : 0,
         ]);
     }
 }

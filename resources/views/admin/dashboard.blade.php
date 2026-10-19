@@ -30,6 +30,7 @@
             @endforeach
             <a href="{{ route('admin.articles.index') }}" class="rounded-2xl border border-slate-200 bg-white p-5 font-semibold text-slate-800 shadow-sm hover:border-[#16A34A]">Manage knowledge articles</a>
             <a href="{{ route('admin.knowledge-comments.index') }}" class="rounded-2xl border border-slate-200 bg-white p-5 font-semibold text-slate-800 shadow-sm hover:border-[#16A34A]">Moderate knowledge discussions</a>
+            <a href="{{ route('admin.seller-verification.index') }}" class="rounded-2xl border border-slate-200 bg-white p-5 font-semibold text-slate-800 shadow-sm hover:border-[#16A34A]">Verify sellers <span class="text-sm text-slate-500">({{ $verifiedSellers }} verified)</span></a>
             <a href="{{ route('admin.settings.edit') }}" class="rounded-2xl border border-slate-200 bg-white p-5 font-semibold text-slate-800 shadow-sm hover:border-[#16A34A]">Edit site settings</a>
         </div>
     </section>

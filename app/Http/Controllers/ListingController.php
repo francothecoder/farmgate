@@ -51,7 +51,14 @@ class ListingController extends Controller
     {
         abort_unless($listing->status === 'approved' && $listing->is_active, 404);
 
-        $listing->load(['category', 'user', 'images', 'country', 'province', 'district']);
+        $listing->load([
+            'category',
+            'user' => fn ($query) => $query->withAvg('sellerReviews', 'rating')->withCount('sellerReviews'),
+            'images',
+            'country',
+            'province',
+            'district',
+        ]);
 
         return view('marketplace.show', compact('listing'));
     }

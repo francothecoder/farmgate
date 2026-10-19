@@ -7,10 +7,11 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 #[Fillable(['name', 'full_name', 'email', 'phone', 'country', 'province', 'district', 'primary_interest', 'role', 'password'])]
 #[Hidden(['password', 'remember_token'])]
@@ -37,6 +38,31 @@ class User extends Authenticatable
     public function knowledgeComments(): HasMany
     {
         return $this->hasMany(KnowledgeComment::class);
+    }
+
+    public function listings(): HasMany
+    {
+        return $this->hasMany(Listing::class);
+    }
+
+    public function businesses(): HasMany
+    {
+        return $this->hasMany(Business::class);
+    }
+
+    public function sellerReviews(): HasMany
+    {
+        return $this->hasMany(SellerReview::class, 'seller_id');
+    }
+
+    public function sellerVerifier(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'seller_verified_by');
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
     }
 
     public function getWhatsAppUrlAttribute(): ?string
@@ -81,6 +107,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_suspended' => 'boolean',
+            'seller_verified_at' => 'datetime',
         ];
     }
 }

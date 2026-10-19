@@ -30,6 +30,10 @@ class BusinessController extends Controller
     {
         abort_unless($business->status === 'approved', 404);
 
+        $business->load([
+            'user' => fn ($query) => $query->withAvg('sellerReviews', 'rating')->withCount('sellerReviews'),
+        ]);
+
         return view('businesses.show', compact('business'));
     }
 }

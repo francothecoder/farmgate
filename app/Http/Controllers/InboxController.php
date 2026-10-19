@@ -23,7 +23,7 @@ class InboxController extends Controller
             ->where('user_id', $user->id)
             ->latest()
             ->paginate(10, ['*'], 'sent_page');
-        $receivedOffers = BuyerOffer::with(['user', 'request'])
+        $receivedOffers = BuyerOffer::with(['user', 'request', 'sellerReview'])
             ->whereHas('request', fn ($query) => $query->where('user_id', $user->id))
             ->latest()
             ->paginate(10, ['*'], 'offers_page');

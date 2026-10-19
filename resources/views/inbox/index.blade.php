@@ -93,6 +93,31 @@
                                     <button name="status" value="declined" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">Decline</button>
                                 </form>
                             @endif
+                            @if($offer->status === 'accepted')
+                                @if($offer->sellerReview)
+                                    <p class="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900">Your review: {{ $offer->sellerReview->rating }} / 5</p>
+                                @else
+                                    <form method="POST" action="{{ route('inbox.offers.review', $offer) }}" class="mt-4 grid gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 sm:grid-cols-[12rem_1fr_auto] sm:items-end">
+                                        @csrf
+                                        <div>
+                                            <label for="seller-rating-{{ $offer->id }}" class="text-sm font-semibold text-slate-700">Rate this supplier</label>
+                                            <select id="seller-rating-{{ $offer->id }}" name="rating" required class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                                                <option value="">Choose stars</option>
+                                                <option value="5">★★★★★ Excellent</option>
+                                                <option value="4">★★★★☆ Good</option>
+                                                <option value="3">★★★☆☆ Okay</option>
+                                                <option value="2">★★☆☆☆ Poor</option>
+                                                <option value="1">★☆☆☆☆ Very poor</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="seller-review-{{ $offer->id }}" class="text-sm font-semibold text-slate-700">Buyer feedback (optional)</label>
+                                            <input id="seller-review-{{ $offer->id }}" name="body" maxlength="1000" placeholder="Describe your experience with the offer" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                                        </div>
+                                        <button class="rounded-xl bg-[#14532D] px-4 py-2.5 text-sm font-semibold text-white">Submit review</button>
+                                    </form>
+                                @endif
+                            @endif
                         </article>
                     @empty
                         <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600">No offers yet. Share a buyer request to invite suppliers to respond.</div>

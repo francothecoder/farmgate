@@ -20,6 +20,19 @@
                     <span class="text-sm font-medium text-slate-500">{{ $listing->status }}</span>
                 </div>
                 <h1 class="text-3xl font-bold text-slate-900">{{ $listing->title }}</h1>
+                <div class="flex flex-wrap items-center gap-3 text-sm">
+                    <span class="font-semibold text-slate-700">Seller: {{ $listing->user?->full_name ?? $listing->user?->name ?? 'FarmGate seller' }}</span>
+                    @if($listing->user?->seller_verified_at)
+                        <span class="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800" title="FarmGate reviewed this seller's approved marketplace activity">
+                            <span aria-hidden="true">✓</span> Verified seller
+                        </span>
+                    @endif
+                    @if($listing->user?->seller_reviews_count)
+                        <span class="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-900">
+                            {{ number_format((float) $listing->user->seller_reviews_avg_rating, 1) }} / 5 · {{ $listing->user->seller_reviews_count }} buyer {{ \Illuminate\Support\Str::plural('review', $listing->user->seller_reviews_count) }}
+                        </span>
+                    @endif
+                </div>
                 <div class="flex items-center gap-4 text-sm text-slate-600">
                     <span>{{ $listing->quantity }} {{ $listing->unit }}</span>
                     <span>•</span>
@@ -65,6 +78,34 @@
                         @endif
                     @endauth
                 </div>
+
+                @auth
+                    @if(auth()->id() !== $listing->user_id)
+                        <details class="rounded-xl border border-rose-100 bg-rose-50/50 p-4">
+                            <summary class="cursor-pointer text-sm font-semibold text-rose-800">Report this listing</summary>
+                            <form method="POST" action="{{ route('reports.store') }}" class="mt-3 grid gap-3">
+                                @csrf
+                                <input type="hidden" name="target_type" value="listing">
+                                <input type="hidden" name="target_id" value="{{ $listing->id }}">
+                                <label for="listing-report-reason" class="text-sm font-medium text-slate-700">What is the issue?</label>
+                                <select id="listing-report-reason" name="reason" required class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                                    <option value="">Select a reason</option>
+                                    <option value="misleading">Misleading details or price</option>
+                                    <option value="unavailable">Product is unavailable</option>
+                                    <option value="scam">Suspected scam</option>
+                                    <option value="inappropriate">Inappropriate content</option>
+                                    <option value="other">Other concern</option>
+                                </select>
+                                <textarea name="details" rows="2" maxlength="2000" placeholder="Add details to help our moderation team (optional)" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"></textarea>
+                                @error('reason')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                @error('target_id')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                <button class="w-fit rounded-xl border border-rose-300 px-4 py-2 text-sm font-semibold text-rose-800">Submit report</button>
+                            </form>
+                        </details>
+                    @endif
+                @else
+                    <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-500 underline">Sign in to report a concern</a>
+                @endauth
             </div>
         </div>
     </section>

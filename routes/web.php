@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\KnowledgeArticleController as AdminKnowledgeArticleController;
 use App\Http\Controllers\Admin\KnowledgeCommentModerationController;
 use App\Http\Controllers\Admin\ModerationController;
+use App\Http\Controllers\Admin\SellerVerificationController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ArticleController;
@@ -16,6 +17,8 @@ use App\Http\Controllers\KnowledgeCommentController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingSubmissionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SellerReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
@@ -41,8 +44,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/listings', [ListingSubmissionController::class, 'store'])->name('listings.store');
     Route::post('/buyer-requests/{buyerRequest}/offers', [BuyerRequestController::class, 'storeOffer'])->middleware('throttle:10,1')->name('buyer-requests.offers.store');
     Route::post('/enquiries', [EnquiryController::class, 'store'])->middleware('throttle:5,1')->name('enquiries.store');
+    Route::post('/reports', [ReportController::class, 'store'])->middleware('throttle:5,1')->name('reports.store');
+    Route::post('/inbox/offers/{buyerOffer}/review', [SellerReviewController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('inbox.offers.review');
 
     Route::prefix('/admin')->name('admin.')->group(function () {
+        Route::get('/seller-verification', [SellerVerificationController::class, 'index'])->name('seller-verification.index');
+        Route::patch('/seller-verification/{user}', [SellerVerificationController::class, 'update'])->name('seller-verification.update');
         Route::get('/moderation/{type}', [ModerationController::class, 'index'])->name('moderation.index');
         Route::patch('/moderation/{type}/{id}', [ModerationController::class, 'update'])->name('moderation.update');
         Route::resource('/articles', AdminKnowledgeArticleController::class)->only(['index', 'create', 'store', 'edit', 'update']);
