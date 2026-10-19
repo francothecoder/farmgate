@@ -63,7 +63,7 @@ class HomepageContentTest extends TestCase
     {
         $this->seed(SampleContentSeeder::class);
 
-        $this->assertDatabaseCount('listings', 10);
+        $this->assertDatabaseCount('listings', 20);
         $this->assertDatabaseCount('knowledge_articles', 10);
     }
 
