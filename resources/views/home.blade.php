@@ -28,7 +28,6 @@
             @if($homeSlides->isNotEmpty())
                 <div
                     x-data="homeImageSlider(@js($homeSlides))"
-                    x-init="init()"
                     x-on:mouseenter="stopTimer()"
                     x-on:mouseleave="startTimer()"
                     x-on:focusin="stopTimer()"

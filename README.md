@@ -102,6 +102,7 @@ php artisan schedule:work
 - Admins can open `/admin` to reach separate queues for listings, buyer requests, business profiles, and reports. Decisions record the acting admin, action, and optional reason in `moderation_events`.
 - Admins can manage Knowledge Hub drafts, review submissions, publication state, Markdown body, tags, SEO metadata, featured status, and cover images under `/admin/articles`.
 - General site name, tagline, email, and phone settings can be edited under `/admin/settings`; the public layout uses the saved values.
+- The homepage carousel automatically features images from approved listings, published articles, and approved businesses. It includes manual navigation, dot controls, keyboard arrows, pause/play, and respects reduced-motion preferences.
 - Local public files use Laravel's `public` disk. Run `php artisan storage:link` after installation; configure an S3-compatible public disk for horizontally scaled production deployments.
 
 ## 10. Queue and scheduler configuration

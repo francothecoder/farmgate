@@ -47,5 +47,6 @@
 - [x] Record moderation decisions, actor, and reason in an audit table
 - [x] Add article authoring, Markdown content, SEO fields, editorial statuses, and cover-image uploads
 - [x] Add editable site contact and branding settings
+- [x] Add an accessible homepage image carousel populated from approved/published content
 - [x] Hide unapproved marketplace, buyer-request, business, and article records from public detail routes
 - [x] Add feature tests for uploads, authorization, moderation, CMS publishing, and public visibility
