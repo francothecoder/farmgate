@@ -15,6 +15,10 @@ class HomePageTest extends TestCase
 
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertOk()
+            ->assertSee('aria-label="Featured FarmGate stories"', false)
+            ->assertSee('Maize grain for sale')
+            ->assertSee('Vegetable seedling bundle')
+            ->assertSee('marketplace/maize-grain-for-sale');
     }
 }

@@ -25,25 +25,73 @@
                 </div>
             </div>
 
-            <div class="grid gap-4 lg:grid-cols-2">
-                <div class="rounded-3xl bg-white/10 p-5 backdrop-blur">
-                    <p class="text-sm text-emerald-100">Active buyers</p>
-                    <p class="mt-3 text-4xl font-bold">160+</p>
-                    <p class="mt-2 text-sm text-emerald-100/80">Matching demand across crop and livestock categories.</p>
-                </div>
-                <div class="rounded-3xl bg-[#DCFCE7] p-5 text-[#14532D]">
-                    <p class="text-sm">Verified sellers</p>
-                    <p class="mt-3 text-4xl font-bold">89</p>
-                    <p class="mt-2 text-sm text-[#14532D]/80">Trusted businesses and producers in this network.</p>
-                </div>
-                <div class="rounded-3xl bg-white/10 p-5 backdrop-blur sm:col-span-2">
-                    <p class="text-sm text-emerald-100">Knowledge library</p>
-                    <div class="mt-3 space-y-2">
-                        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2 text-sm"><span>Crop production</span><span>34 guides</span></div>
-                        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2 text-sm"><span>Soil & fertilizer</span><span>19 guides</span></div>
+            @if($homeSlides->isNotEmpty())
+                <div
+                    x-data="homeImageSlider(@js($homeSlides))"
+                    x-init="init()"
+                    x-on:mouseenter="stopTimer()"
+                    x-on:mouseleave="startTimer()"
+                    x-on:focusin="stopTimer()"
+                    x-on:focusout="if (!$el.contains($event.relatedTarget)) startTimer()"
+                    x-on:keydown.left.prevent="previous()"
+                    x-on:keydown.right.prevent="next()"
+                    aria-label="Featured FarmGate stories"
+                    aria-roledescription="carousel"
+                    tabindex="0"
+                    class="relative min-h-[24rem] overflow-hidden rounded-3xl border border-white/10 bg-white/10 shadow-2xl outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
+                    <img
+                        x-bind:src="slides[activeIndex].image"
+                        x-bind:alt="slides[activeIndex].alt"
+                        class="absolute inset-0 h-full w-full object-cover"
+                        fetchpriority="high"
+                    >
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#082b1b] via-[#082b1b]/45 to-transparent"></div>
+
+                    <div class="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200" x-text="slides[activeIndex].label"></p>
+                        <h2 class="mt-3 max-w-lg text-2xl font-bold sm:text-3xl" x-text="slides[activeIndex].title"></h2>
+                        <p class="mt-2 max-w-lg text-sm text-white/85" x-text="slides[activeIndex].description"></p>
+                        <a
+                            x-bind:href="slides[activeIndex].url"
+                            x-text="slides[activeIndex].link_label"
+                            class="mt-5 inline-flex rounded-full bg-[#22C55E] px-5 py-3 text-sm font-semibold text-[#14532D] hover:bg-[#4ade80]"
+                        ></a>
+
+                        <div x-show="slides.length > 1" class="mt-5 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-2" aria-label="Choose a featured story">
+                                <template x-for="(slide, index) in slides" x-bind:key="index">
+                                    <button
+                                        type="button"
+                                        x-on:click="show(index)"
+                                        x-bind:aria-label="`Show story ${index + 1}: ${slide.title}`"
+                                        x-bind:aria-current="activeIndex === index ? 'true' : 'false'"
+                                        class="h-2.5 w-2.5 rounded-full ring-1 ring-white/80"
+                                        x-bind:class="activeIndex === index ? 'bg-white' : 'bg-white/30'"
+                                    ></button>
+                                </template>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" x-on:click="previous()" aria-label="Previous story" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 text-lg hover:bg-white/15">‹</button>
+                                <button type="button" x-on:click="next()" aria-label="Next story" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/40 text-lg hover:bg-white/15">›</button>
+                                <button
+                                    type="button"
+                                    x-on:click="isPlaying ? pause() : play()"
+                                    x-bind:aria-label="isPlaying ? 'Pause automatic slides' : 'Play automatic slides'"
+                                    x-text="isPlaying ? 'Pause' : 'Play'"
+                                    class="rounded-full border border-white/40 px-3 py-2 text-xs font-semibold hover:bg-white/15"
+                                ></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @else
+                <div class="flex min-h-[24rem] flex-col justify-end rounded-3xl border border-white/10 bg-white/10 p-8 backdrop-blur">
+                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-100">FarmGate Zambia</p>
+                    <h2 class="mt-3 text-3xl font-bold">Stories from the agricultural community</h2>
+                    <p class="mt-3 text-emerald-50/90">Featured photos will appear here as approved listings and published stories are added.</p>
+                </div>
+            @endif
         </div>
     </section>
 
