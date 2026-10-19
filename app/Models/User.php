@@ -34,6 +34,11 @@ class User extends Authenticatable
         return $this->hasMany(BuyerOffer::class, 'user_id');
     }
 
+    public function knowledgeComments(): HasMany
+    {
+        return $this->hasMany(KnowledgeComment::class);
+    }
+
     public function getWhatsAppUrlAttribute(): ?string
     {
         $digits = preg_replace('/\D+/', '', $this->phone ?? '');

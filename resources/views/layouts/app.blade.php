@@ -40,6 +40,10 @@
                         @auth
                             <a href="{{ route('inbox.index') }}" class="hidden text-sm font-semibold text-[#14532D] sm:inline">Inbox</a>
                             <a href="{{ route('dashboard') }}" class="rounded-full bg-[#14532D] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0f3c26]">Dashboard</a>
+                            <form method="POST" action="{{ route('logout') }}" class="hidden sm:block">
+                                @csrf
+                                <button type="submit" class="text-sm font-semibold text-slate-600 transition hover:text-orange-600">Log out</button>
+                            </form>
                         @else
                             <a href="{{ route('login') }}" class="text-sm font-medium text-slate-700 hover:text-[#14532D]">Login</a>
                             <a href="{{ route('register') }}" class="rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-600">Join FarmGate</a>

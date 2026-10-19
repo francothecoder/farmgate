@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\KnowledgeArticleController as AdminKnowledgeArticleController;
+use App\Http\Controllers\Admin\KnowledgeCommentModerationController;
 use App\Http\Controllers\Admin\ModerationController;
 use App\Http\Controllers\Admin\SiteSettingController;
 use App\Http\Controllers\AdminDashboardController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingSubmissionController;
+use App\Http\Controllers\KnowledgeCommentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +29,9 @@ Route::get('/businesses', [BusinessController::class, 'index'])->name('businesse
 Route::get('/businesses/{business}', [BusinessController::class, 'show'])->name('businesses.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/knowledge/{knowledgeArticle:slug}/comments', [KnowledgeCommentController::class, 'store'])
+        ->middleware('throttle:5,1')
+        ->name('knowledge.comments.store');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/inbox', [InboxController::class, 'index'])->name('inbox.index');
     Route::post('/inbox/enquiries/{enquiry}/reply', [InboxController::class, 'reply'])->name('inbox.enquiries.reply');
@@ -41,6 +46,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/moderation/{type}', [ModerationController::class, 'index'])->name('moderation.index');
         Route::patch('/moderation/{type}/{id}', [ModerationController::class, 'update'])->name('moderation.update');
         Route::resource('/articles', AdminKnowledgeArticleController::class)->only(['index', 'create', 'store', 'edit', 'update']);
+        Route::get('/knowledge-comments', [KnowledgeCommentModerationController::class, 'index'])->name('knowledge-comments.index');
+        Route::patch('/knowledge-comments/{knowledgeComment}', [KnowledgeCommentModerationController::class, 'update'])->name('knowledge-comments.update');
         Route::get('/settings', [SiteSettingController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [SiteSettingController::class, 'update'])->name('settings.update');
     });

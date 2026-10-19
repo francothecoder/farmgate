@@ -7,6 +7,7 @@ use App\Models\BuyerRequest;
 use App\Models\Category;
 use App\Models\KnowledgeArticle;
 use App\Models\Listing;
+use App\Models\SiteSetting;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +37,10 @@ class HomeController extends Controller
             ->limit(4)
             ->get() : collect();
         $businesses = Schema::hasTable('businesses') ? Business::query()->where('status', 'approved')->latest()->limit(4)->get() : collect();
-        $homeSlides = $this->homeSlides($featuredListings, $articles, $businesses);
+        $configuredListingIds = SiteSetting::where('key', 'home_slider_listing_ids')->value('value');
+        $homeSlides = $configuredListingIds === null
+            ? $this->homeSlides($featuredListings, $articles, $businesses)
+            : $this->selectedListingSlides($configuredListingIds);
 
         return view('home', compact(
             'featuredCategories',
@@ -46,6 +50,36 @@ class HomeController extends Controller
             'businesses',
             'homeSlides'
         ));
+    }
+
+    private function selectedListingSlides(string $configuredListingIds): Collection
+    {
+        $listingIds = json_decode($configuredListingIds, true);
+
+        if (! is_array($listingIds)) {
+            return collect();
+        }
+
+        $listings = Listing::with(['category', 'images'])
+            ->where('status', 'approved')
+            ->where('is_active', true)
+            ->whereIn('id', $listingIds)
+            ->get()
+            ->keyBy('id');
+
+        return collect($listingIds)
+            ->map(fn ($id) => $listings->get($id))
+            ->filter()
+            ->map(fn (Listing $listing) => [
+                'image' => $listing->featured_image_url ?? $listing->images->first()?->url,
+                'alt' => $listing->title,
+                'label' => $listing->category?->name ?? 'Marketplace',
+                'title' => $listing->title,
+                'description' => Str::limit($listing->description, 130),
+                'url' => route('listings.show', ['listing' => $listing->slug]),
+                'link_label' => 'Explore listing',
+            ])
+            ->values();
     }
 
     private function homeSlides(Collection $listings, Collection $articles, Collection $businesses): Collection

@@ -57,45 +57,120 @@ class SampleContentSeeder extends Seeder
             SiteSetting::firstOrCreate(['key' => $setting['key']], $setting);
         }
 
-        Listing::updateOrCreate(
-            ['slug' => 'maize-grain-for-sale'],
+        $sampleListings = [
             [
-                'user_id' => $user->id,
-                'category_id' => $category->id,
+                'slug' => 'maize-grain-for-sale',
                 'title' => 'Maize grain for sale',
                 'description' => 'High-quality maize grain harvested in Central Province, packaged for bulk buyers.',
                 'quantity' => 120,
                 'unit' => 'bags',
                 'price' => 420,
-                'currency' => 'ZMW',
-                'negotiable' => true,
-                'country_id' => $country->id,
-                'status' => 'approved',
-                'availability' => 'available',
-                'featured_image' => 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80',
-                'is_active' => true,
-            ]
-        );
-
-        Listing::updateOrCreate(
-            ['slug' => 'vegetable-seedling-bundle'],
+                'image' => 'https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80',
+            ],
             [
-                'user_id' => $user->id,
-                'category_id' => $category->id,
+                'slug' => 'vegetable-seedling-bundle',
                 'title' => 'Vegetable seedling bundle',
                 'description' => 'Healthy tomato and cabbage seedlings raised in a controlled nursery.',
                 'quantity' => 250,
                 'unit' => 'seedlings',
                 'price' => 150,
+                'image' => 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'fresh-soybeans-central-province',
+                'title' => 'Fresh soybeans from Central Province',
+                'description' => 'Clean, dry soybeans suitable for food processing and livestock feed.',
+                'quantity' => 75,
+                'unit' => 'bags',
+                'price' => 680,
+                'image' => 'https://images.unsplash.com/photo-1595979862215-37f3d4be3a96?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'sun-dried-groundnuts',
+                'title' => 'Sun-dried groundnuts',
+                'description' => 'Locally grown groundnuts, carefully dried and ready for wholesale.',
+                'quantity' => 40,
+                'unit' => 'bags',
+                'price' => 1250,
+                'image' => 'https://images.unsplash.com/photo-1567892737950-30c4db37cd89?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'fresh-tomatoes-lusaka',
+                'title' => 'Fresh tomatoes, Lusaka',
+                'description' => 'Firm market-grade tomatoes packed in ventilated crates.',
+                'quantity' => 90,
+                'unit' => 'crates',
+                'price' => 230,
+                'image' => 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'organic-free-range-eggs',
+                'title' => 'Free-range farm eggs',
+                'description' => 'Fresh free-range eggs collected daily from a smallholder poultry farm.',
+                'quantity' => 60,
+                'unit' => 'trays',
+                'price' => 95,
+                'image' => 'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'sunflower-seed-bulk',
+                'title' => 'Sunflower seed for oil pressing',
+                'description' => 'Clean sunflower seed suitable for local oil processors and feed producers.',
+                'quantity' => 55,
+                'unit' => 'bags',
+                'price' => 540,
+                'image' => 'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'fresh-honey-northern-province',
+                'title' => 'Pure wildflower honey',
+                'description' => 'Raw, unfiltered honey from community-managed apiaries.',
+                'quantity' => 120,
+                'unit' => 'jars',
+                'price' => 85,
+                'image' => 'https://images.unsplash.com/photo-1587049352851-8d4e89133924?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'dried-common-beans',
+                'title' => 'Dried common beans',
+                'description' => 'Sorted, clean common beans with consistent size for retailers and processors.',
+                'quantity' => 65,
+                'unit' => 'bags',
+                'price' => 720,
+                'image' => 'https://images.unsplash.com/photo-1515543904379-3d757afe72e4?auto=format&fit=crop&w=1200&q=80',
+            ],
+            [
+                'slug' => 'fresh-sweet-potatoes',
+                'title' => 'Fresh sweet potatoes',
+                'description' => 'Well-cured sweet potatoes harvested to order from a family farm.',
+                'quantity' => 100,
+                'unit' => 'bags',
+                'price' => 310,
+                'image' => 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=1200&q=80',
+            ],
+        ];
+
+        foreach ($sampleListings as $sampleListing) {
+            Listing::updateOrCreate(
+                ['slug' => $sampleListing['slug']],
+                [
+                'user_id' => $user->id,
+                'category_id' => $category->id,
+                'title' => $sampleListing['title'],
+                'description' => $sampleListing['description'],
+                'quantity' => $sampleListing['quantity'],
+                'unit' => $sampleListing['unit'],
+                'price' => $sampleListing['price'],
                 'currency' => 'ZMW',
-                'negotiable' => false,
+                'negotiable' => true,
                 'country_id' => $country->id,
                 'status' => 'approved',
                 'availability' => 'available',
-                'featured_image' => 'https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=1200&q=80',
+                'featured_image' => $sampleListing['image'],
                 'is_active' => true,
-            ]
-        );
+                ]
+            );
+        }
 
         BuyerRequest::updateOrCreate(
             ['slug' => 'maize-for-feed-production'],
@@ -131,6 +206,39 @@ class SampleContentSeeder extends Seeder
                 'is_featured' => true,
             ]
         );
+
+        $guides = [
+            ['soil-health-maize', 'Build healthier soils for better maize harvests', 'Simple rotation, composting, and soil-cover practices that improve soil structure and crop resilience.', 'soil, maize, conservation'],
+            ['smallholder-poultry-basics', 'Smallholder poultry: a practical starter guide', 'Plan housing, clean water, feed, vaccination, and daily checks before growing your flock.', 'poultry, livestock, biosecurity'],
+            ['post-harvest-grain-storage', 'Keep grain safe after harvest', 'Drying, sorting, and storage steps that help protect grain from moisture, insects, and avoidable losses.', 'storage, post-harvest, grain'],
+            ['dry-season-vegetable-gardening', 'Grow vegetables through the dry season', 'Choose suitable crops, conserve water, and plan planting cycles for a productive dry-season garden.', 'vegetables, irrigation, dry season'],
+            ['farm-record-keeping', 'Farm records that support better decisions', 'A simple system for tracking inputs, labour, harvests, sales, and cash flow on a small farm.', 'business, records, planning'],
+            ['safe-pesticide-use', 'Use crop protection products safely', 'Read labels, wear protective equipment, store products securely, and observe application guidance.', 'crop protection, safety, inputs'],
+            ['composting-farm-waste', 'Turn farm waste into useful compost', 'Balance green and dry materials, manage moisture, and use mature compost to support healthy crops.', 'compost, soil health, recycling'],
+            ['market-ready-produce', 'Prepare produce for a stronger market', 'Practical grading, cleaning, packing, and buyer communication tips to improve produce presentation.', 'marketing, produce, buyers'],
+            ['climate-smart-farm-planning', 'Plan a more climate-resilient farm season', 'Use local forecasts, diversify crops, conserve soil moisture, and prepare for changing conditions.', 'climate, planning, resilience'],
+        ];
+
+        foreach ($guides as [$slug, $title, $summary, $tags]) {
+            KnowledgeArticle::updateOrCreate(
+                ['slug' => $slug],
+                [
+                    'category_id' => $knowledgeCategory->id,
+                    'title' => $title,
+                    'summary' => $summary,
+                    'body' => '<p>'.$summary.'</p><p>Start with a small, manageable change and keep notes on what works in your location. Share your experience with other FarmGate members so the community can learn from practical results.</p>',
+                    'author_id' => $admin->id,
+                    'reviewer_id' => $admin->id,
+                    'status' => 'published',
+                    'published_at' => now(),
+                    'reading_time' => 4,
+                    'seo_title' => $title,
+                    'seo_description' => $summary,
+                    'tags' => $tags,
+                    'is_featured' => false,
+                ]
+            );
+        }
 
         Business::updateOrCreate(
             ['name' => 'Green Valley Agro'],

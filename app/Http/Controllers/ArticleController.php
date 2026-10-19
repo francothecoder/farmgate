@@ -38,7 +38,13 @@ class ArticleController extends Controller
         abort_unless($knowledgeArticle->status === 'published', 404);
 
         $knowledgeArticle->load(['category', 'author']);
+        $comments = $knowledgeArticle->comments()
+            ->with(['user', 'replies' => fn ($query) => $query->with('user')->where('status', 'approved')->oldest()])
+            ->whereNull('parent_id')
+            ->where('status', 'approved')
+            ->latest()
+            ->paginate(20);
 
-        return view('knowledge.show', compact('knowledgeArticle'));
+        return view('knowledge.show', compact('knowledgeArticle', 'comments'));
     }
 }
