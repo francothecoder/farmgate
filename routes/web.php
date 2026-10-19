@@ -10,6 +10,7 @@ use App\Http\Controllers\BuyerRequestController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InboxController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingSubmissionController;
 use App\Http\Controllers\ProfileController;
@@ -27,11 +28,14 @@ Route::get('/businesses/{business}', [BusinessController::class, 'show'])->name(
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::get('/inbox', [InboxController::class, 'index'])->name('inbox.index');
+    Route::post('/inbox/enquiries/{enquiry}/reply', [InboxController::class, 'reply'])->name('inbox.enquiries.reply');
+    Route::patch('/inbox/offers/{buyerOffer}', [InboxController::class, 'respondToOffer'])->name('inbox.offers.respond');
     Route::get('/admin', AdminDashboardController::class)->name('admin.dashboard');
     Route::get('/listings/create', [ListingSubmissionController::class, 'create'])->name('listings.create');
     Route::post('/listings', [ListingSubmissionController::class, 'store'])->name('listings.store');
-    Route::post('/buyer-requests/{buyerRequest}/offers', [BuyerRequestController::class, 'storeOffer'])->name('buyer-requests.offers.store');
-    Route::post('/enquiries', [EnquiryController::class, 'store'])->name('enquiries.store');
+    Route::post('/buyer-requests/{buyerRequest}/offers', [BuyerRequestController::class, 'storeOffer'])->middleware('throttle:10,1')->name('buyer-requests.offers.store');
+    Route::post('/enquiries', [EnquiryController::class, 'store'])->middleware('throttle:5,1')->name('enquiries.store');
 
     Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/moderation/{type}', [ModerationController::class, 'index'])->name('moderation.index');

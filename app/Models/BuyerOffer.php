@@ -9,8 +9,13 @@ class BuyerOffer extends Model
 {
     protected $fillable = [
         'buyer_request_id', 'user_id', 'quantity', 'price', 'availability_date',
-        'message', 'status', 'listing_id'
+        'message', 'status', 'listing_id', 'response_message', 'responded_at',
     ];
+
+    protected function casts(): array
+    {
+        return ['availability_date' => 'date', 'responded_at' => 'datetime'];
+    }
 
     public function request(): BelongsTo
     {

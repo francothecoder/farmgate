@@ -31,4 +31,10 @@ class BuyerRequest extends Model
     {
         return $this->hasMany(BuyerOffer::class);
     }
+
+    public function enquiries(): HasMany
+    {
+        return $this->hasMany(Enquiry::class, 'related_id')
+            ->where('related_type', 'buyer_request');
+    }
 }
