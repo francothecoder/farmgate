@@ -154,23 +154,36 @@ class SampleContentSeeder extends Seeder
             Listing::updateOrCreate(
                 ['slug' => $sampleListing['slug']],
                 [
-                'user_id' => $user->id,
-                'category_id' => $category->id,
-                'title' => $sampleListing['title'],
-                'description' => $sampleListing['description'],
-                'quantity' => $sampleListing['quantity'],
-                'unit' => $sampleListing['unit'],
-                'price' => $sampleListing['price'],
-                'currency' => 'ZMW',
-                'negotiable' => true,
-                'country_id' => $country->id,
-                'status' => 'approved',
-                'availability' => 'available',
-                'featured_image' => $sampleListing['image'],
-                'is_active' => true,
+                    'user_id' => $user->id,
+                    'category_id' => $category->id,
+                    'title' => $sampleListing['title'],
+                    'description' => $sampleListing['description'],
+                    'quantity' => $sampleListing['quantity'],
+                    'unit' => $sampleListing['unit'],
+                    'price' => $sampleListing['price'],
+                    'currency' => 'ZMW',
+                    'negotiable' => true,
+                    'country_id' => $country->id,
+                    'status' => 'approved',
+                    'availability' => 'available',
+                    'featured_image' => $sampleListing['image'],
+                    'is_active' => true,
                 ]
             );
         }
+
+        SiteSetting::firstOrCreate(
+            ['key' => 'home_slider_listing_ids'],
+            [
+                'value' => json_encode(
+                    Listing::whereIn('slug', array_column(array_slice($sampleListings, 0, 6), 'slug'))
+                        ->orderBy('title')
+                        ->pluck('id')
+                        ->all()
+                ),
+                'group_name' => 'homepage',
+            ],
+        );
 
         BuyerRequest::updateOrCreate(
             ['slug' => 'maize-for-feed-production'],
@@ -208,25 +221,75 @@ class SampleContentSeeder extends Seeder
         );
 
         $guides = [
-            ['soil-health-maize', 'Build healthier soils for better maize harvests', 'Simple rotation, composting, and soil-cover practices that improve soil structure and crop resilience.', 'soil, maize, conservation'],
-            ['smallholder-poultry-basics', 'Smallholder poultry: a practical starter guide', 'Plan housing, clean water, feed, vaccination, and daily checks before growing your flock.', 'poultry, livestock, biosecurity'],
-            ['post-harvest-grain-storage', 'Keep grain safe after harvest', 'Drying, sorting, and storage steps that help protect grain from moisture, insects, and avoidable losses.', 'storage, post-harvest, grain'],
-            ['dry-season-vegetable-gardening', 'Grow vegetables through the dry season', 'Choose suitable crops, conserve water, and plan planting cycles for a productive dry-season garden.', 'vegetables, irrigation, dry season'],
-            ['farm-record-keeping', 'Farm records that support better decisions', 'A simple system for tracking inputs, labour, harvests, sales, and cash flow on a small farm.', 'business, records, planning'],
-            ['safe-pesticide-use', 'Use crop protection products safely', 'Read labels, wear protective equipment, store products securely, and observe application guidance.', 'crop protection, safety, inputs'],
-            ['composting-farm-waste', 'Turn farm waste into useful compost', 'Balance green and dry materials, manage moisture, and use mature compost to support healthy crops.', 'compost, soil health, recycling'],
-            ['market-ready-produce', 'Prepare produce for a stronger market', 'Practical grading, cleaning, packing, and buyer communication tips to improve produce presentation.', 'marketing, produce, buyers'],
-            ['climate-smart-farm-planning', 'Plan a more climate-resilient farm season', 'Use local forecasts, diversify crops, conserve soil moisture, and prepare for changing conditions.', 'climate, planning, resilience'],
+            [
+                'soil-health-maize', 'Build healthier soils for better maize harvests',
+                'Simple rotation, composting, and soil-cover practices that improve soil structure and crop resilience.',
+                'soil, maize, conservation', 'crop-production', 'Crop Production',
+                'Rotate maize with legumes where suitable, keep soil covered between crops, and return healthy crop residues to the field. Before changing fertilizer use, compare soil tests or seek local extension advice so nutrients match the field and crop needs.',
+            ],
+            [
+                'smallholder-poultry-basics', 'Smallholder poultry: a practical starter guide',
+                'Plan housing, clean water, feed, vaccination, and daily checks before growing your flock.',
+                'poultry, livestock, biosecurity', 'livestock', 'Livestock',
+                'Prepare a dry, well-ventilated shelter with enough space, clean water, and feed before bringing in birds. Keep new or sick birds separate, clean drinkers and feeders, and ask a local animal-health professional about a vaccination plan for your area.',
+            ],
+            [
+                'post-harvest-grain-storage', 'Keep grain safe after harvest',
+                'Drying, sorting, and storage steps that help protect grain from moisture, insects, and avoidable losses.',
+                'storage, post-harvest, grain', 'post-harvest', 'Post-harvest handling',
+                'Harvest mature grain, remove damaged material, and dry it to the safe level recommended by local extension officers before storage. Use clean, dry bags or approved containers, keep them off floors and away from walls, and inspect stored grain regularly for moisture or pests.',
+            ],
+            [
+                'dry-season-vegetable-gardening', 'Grow vegetables through the dry season',
+                'Choose suitable crops, conserve water, and plan planting cycles for a productive dry-season garden.',
+                'vegetables, irrigation, dry season', 'crop-production', 'Crop Production',
+                'Choose varieties suited to local conditions and plan planting dates around reliable water access. Water near the roots in the cooler parts of the day, use a clean mulch to slow evaporation, and stagger planting so produce is ready in manageable batches.',
+            ],
+            [
+                'farm-record-keeping', 'Farm records that support better decisions',
+                'A simple system for tracking inputs, labour, harvests, sales, and cash flow on a small farm.',
+                'business, records, planning', 'farm-business', 'Farm business',
+                'Record each purchase and sale with its date, quantity, unit, and amount; also note labour, transport, and other production costs. At the end of each season, compare the records with harvest and sales so you can identify profitable crops and plan inputs with more confidence.',
+            ],
+            [
+                'safe-pesticide-use', 'Use crop protection products safely',
+                'Read labels, wear protective equipment, store products securely, and observe application guidance.',
+                'crop protection, safety, inputs', 'crop-protection', 'Crop protection',
+                'Use only products approved for the crop and pest, and follow the product label and local extension advice. Wear the protective equipment specified on the label, keep people and animals away during application, observe re-entry and pre-harvest intervals, and store products in their original containers away from food and children.',
+            ],
+            [
+                'composting-farm-waste', 'Turn farm waste into useful compost',
+                'Balance green and dry materials, manage moisture, and use mature compost to support healthy crops.',
+                'compost, soil health, recycling', 'crop-production', 'Crop Production',
+                'Combine a mix of fresh green material and dry plant matter, chop bulky pieces, and keep the heap moist but not waterlogged. Turn it when the centre cools or smells unpleasant; finished compost is dark and crumbly. Avoid adding plastics, treated wood, or waste contaminated with chemicals.',
+            ],
+            [
+                'market-ready-produce', 'Prepare produce for a stronger market',
+                'Practical grading, cleaning, packing, and buyer communication tips to improve produce presentation.',
+                'marketing, produce, buyers', 'farm-business', 'Farm business',
+                'Ask buyers about preferred varieties, grades, quantities, delivery days, and packaging before harvest. Sort out damaged produce, use clean suitable packaging, and agree on price and delivery details in writing where possible to reduce misunderstandings.',
+            ],
+            [
+                'climate-smart-farm-planning', 'Plan a more climate-resilient farm season',
+                'Use local forecasts, diversify crops, conserve soil moisture, and prepare for changing conditions.',
+                'climate, planning, resilience', 'climate-resilience', 'Climate resilience',
+                'Use local seasonal forecasts and extension updates as planning inputs, not guarantees. Diversify crops where practical, protect soil with cover and mulch, maintain drainage where heavy rain is a risk, and identify backup water and seed options before the season becomes difficult.',
+            ],
         ];
 
-        foreach ($guides as [$slug, $title, $summary, $tags]) {
+        foreach ($guides as [$slug, $title, $summary, $tags, $categorySlug, $categoryName, $body]) {
+            $guideCategory = KnowledgeCategory::firstOrCreate(
+                ['slug' => $categorySlug],
+                ['name' => $categoryName],
+            );
+
             KnowledgeArticle::updateOrCreate(
                 ['slug' => $slug],
                 [
-                    'category_id' => $knowledgeCategory->id,
+                    'category_id' => $guideCategory->id,
                     'title' => $title,
                     'summary' => $summary,
-                    'body' => '<p>'.$summary.'</p><p>Start with a small, manageable change and keep notes on what works in your location. Share your experience with other FarmGate members so the community can learn from practical results.</p>',
+                    'body' => '<p>'.$summary.'</p><p>'.$body.'</p><p>Start with a manageable step, keep notes on what works in your location, and consult local extension services for advice tailored to your crop and conditions. Share practical results with the FarmGate community so other farmers can learn from your experience.</p>',
                     'author_id' => $admin->id,
                     'reviewer_id' => $admin->id,
                     'status' => 'published',

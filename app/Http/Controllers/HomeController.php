@@ -37,7 +37,9 @@ class HomeController extends Controller
             ->limit(4)
             ->get() : collect();
         $businesses = Schema::hasTable('businesses') ? Business::query()->where('status', 'approved')->latest()->limit(4)->get() : collect();
-        $configuredListingIds = SiteSetting::where('key', 'home_slider_listing_ids')->value('value');
+        $configuredListingIds = Schema::hasTable('site_settings')
+            ? SiteSetting::where('key', 'home_slider_listing_ids')->value('value')
+            : null;
         $homeSlides = $configuredListingIds === null
             ? $this->homeSlides($featuredListings, $articles, $businesses)
             : $this->selectedListingSlides($configuredListingIds);
@@ -63,6 +65,7 @@ class HomeController extends Controller
         $listings = Listing::with(['category', 'images'])
             ->where('status', 'approved')
             ->where('is_active', true)
+            ->whereNotNull('featured_image')
             ->whereIn('id', $listingIds)
             ->get()
             ->keyBy('id');

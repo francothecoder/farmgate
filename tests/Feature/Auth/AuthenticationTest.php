@@ -51,4 +51,14 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/');
     }
+
+    public function test_authenticated_users_can_access_logout_from_the_main_navigation(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get(route('home'))
+            ->assertOk()
+            ->assertSee('action="'.route('logout').'"', false)
+            ->assertSee('Log out');
+    }
 }

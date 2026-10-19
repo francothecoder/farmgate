@@ -31,7 +31,7 @@ class KnowledgeArticle extends Model
 
     public function comments(): HasMany
     {
-        return $this->hasMany(KnowledgeComment::class);
+        return $this->hasMany(KnowledgeComment::class, 'knowledge_article_id');
     }
 
     public function getFeaturedImageUrlAttribute(): ?string

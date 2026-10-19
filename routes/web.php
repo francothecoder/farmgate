@@ -12,9 +12,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\KnowledgeCommentController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingSubmissionController;
-use App\Http\Controllers\KnowledgeCommentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 

@@ -29,9 +29,12 @@
             @endforeach
             <div class="border-t border-slate-100 pt-5">
                 <label for="home_slider_listing_ids" class="text-sm font-semibold text-slate-700">Homepage product slider</label>
-                <p class="mt-1 text-sm text-slate-500">Choose up to six active, approved products with photos. Drag order is not supported yet; selection order follows this list.</p>
+                <p class="mt-1 text-sm text-slate-500">Choose up to six active, approved products with photos. The carousel follows the alphabetical order shown here.</p>
                 <select id="home_slider_listing_ids" name="home_slider_listing_ids[]" multiple size="8" class="mt-3 w-full rounded-xl border border-slate-200 px-3 py-2">
-                    @php($selectedSliderListings = old('home_slider_listing_ids', json_decode($settings['home_slider_listing_ids'] ?? '[]', true) ?: []))
+                    @php
+                        $selectedSliderListings = old('home_slider_listing_ids', json_decode($settings['home_slider_listing_ids'] ?? '[]', true));
+                        $selectedSliderListings = is_array($selectedSliderListings) ? $selectedSliderListings : [];
+                    @endphp
                     @foreach($featuredListings as $listing)
                         <option value="{{ $listing->id }}" @selected(in_array($listing->id, $selectedSliderListings))>{{ $listing->title }}</option>
                     @endforeach

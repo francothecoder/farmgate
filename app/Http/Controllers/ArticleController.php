@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KnowledgeArticle;
+use App\Models\KnowledgeCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
@@ -12,6 +13,11 @@ class ArticleController extends Controller
     public function index(Request $request): View
     {
         $articles = collect();
+        $categories = Schema::hasTable('knowledge_categories')
+            ? KnowledgeCategory::withCount([
+                'articles' => fn ($query) => $query->where('status', 'published'),
+            ])->orderBy('name')->get()
+            : collect();
 
         if (Schema::hasTable('knowledge_articles')) {
             $query = KnowledgeArticle::with(['category', 'author'])->where('status', 'published');
@@ -27,10 +33,10 @@ class ArticleController extends Controller
                 $query->where('category_id', $request->category);
             }
 
-            $articles = $query->orderByDesc('is_featured')->orderByDesc('published_at')->paginate(10);
+            $articles = $query->orderByDesc('is_featured')->orderByDesc('published_at')->paginate(10)->withQueryString();
         }
 
-        return view('knowledge.index', compact('articles'));
+        return view('knowledge.index', compact('articles', 'categories'));
     }
 
     public function show(KnowledgeArticle $knowledgeArticle): View
