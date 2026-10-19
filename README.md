@@ -106,6 +106,7 @@ php artisan schedule:work
 - Buyers can contact listing owners on WhatsApp when the owner has provided a valid phone number, send an in-platform enquiry, and follow replies in `/inbox`. Buyers can review offers on their requests and accept or decline them from their inbox.
 - The homepage product carousel is curated by administrators from Site settings. Knowledge Hub discussions support threaded replies; moderators approve comments before publication. `php artisan db:seed --class=SampleContentSeeder` adds ten sample products and ten practical guides.
 - Seller trust features include admin-granted verified badges, buyer reviews available after an offer is accepted, and report forms for marketplace listings and business profiles. Reports enter the existing admin moderation queue.
+- Accepting a supplier offer creates a FarmGate order snapshot with the agreed quantity, total price, and collection/delivery choice. Sellers post progress updates, buyers confirm receipt, and order reviews unlock only after completion. FarmGate tracks logistics but does not process or hold payments.
 - Seller phone numbers can be added at registration or updated from the profile page. WhatsApp contact links are only shown when a usable number is present.
 - Local public files use Laravel's `public` disk. Run `php artisan storage:link` after installation; configure an S3-compatible public disk for horizontally scaled production deployments.
 

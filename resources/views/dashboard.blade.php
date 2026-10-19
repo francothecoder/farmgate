@@ -13,6 +13,7 @@
                     <a href="{{ route('admin.dashboard') }}" class="rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white">Admin console</a>
                 @endif
                 <a href="{{ route('inbox.index') }}" class="rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white">Open inbox</a>
+                <a href="{{ route('orders.index') }}" class="rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white">Track orders</a>
             </div>
         </div>
 
@@ -24,6 +25,11 @@
                 <h3 class="text-lg font-bold text-slate-900">Action needed</h3>
                 <p class="mt-3 text-3xl font-bold text-orange-700">{{ $unreadEnquiries + $pendingOffers }}</p>
                 <p class="mt-1 text-sm text-slate-600">{{ $unreadEnquiries }} enquiries · {{ $pendingOffers }} offers to review</p>
+            </a>
+            <a href="{{ route('orders.index') }}" class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 shadow-sm transition hover:border-emerald-400">
+                <h3 class="text-lg font-bold text-slate-900">Orders in progress</h3>
+                <p class="mt-3 text-3xl font-bold text-emerald-800">{{ $activeOrders }}</p>
+                <p class="mt-1 text-sm text-slate-600">Track preparation, delivery, or collection</p>
             </a>
         </div>
 

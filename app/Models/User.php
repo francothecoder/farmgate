@@ -65,6 +65,16 @@ class User extends Authenticatable
         return $this->hasMany(Report::class);
     }
 
+    public function buyerOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'buyer_id');
+    }
+
+    public function sellerOrders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'seller_id');
+    }
+
     public function getWhatsAppUrlAttribute(): ?string
     {
         $digits = preg_replace('/\D+/', '', $this->phone ?? '');

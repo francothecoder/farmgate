@@ -16,6 +16,7 @@ use App\Http\Controllers\InboxController;
 use App\Http\Controllers\KnowledgeCommentController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingSubmissionController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SellerReviewController;
@@ -37,6 +38,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('knowledge.comments.store');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/inbox', [InboxController::class, 'index'])->name('inbox.index');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+    Route::post('/orders/{order}/complete', [OrderController::class, 'complete'])->name('orders.complete');
     Route::post('/inbox/enquiries/{enquiry}/reply', [InboxController::class, 'reply'])->name('inbox.enquiries.reply');
     Route::patch('/inbox/offers/{buyerOffer}', [InboxController::class, 'respondToOffer'])->name('inbox.offers.respond');
     Route::get('/admin', AdminDashboardController::class)->name('admin.dashboard');

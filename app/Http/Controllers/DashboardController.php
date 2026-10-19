@@ -7,6 +7,7 @@ use App\Models\BuyerOffer;
 use App\Models\BuyerRequest;
 use App\Models\Enquiry;
 use App\Models\Listing;
+use App\Models\Order;
 use App\Models\SavedArticle;
 use App\Models\SavedListing;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,13 @@ class DashboardController extends Controller
                 ->where('status', 'submitted')
                 ->count()
             : 0;
+        $activeOrders = Schema::hasTable('orders')
+            ? Order::where(fn ($query) => $query
+                ->where('buyer_id', $user->id)
+                ->orWhere('seller_id', $user->id))
+                ->where('status', '!=', 'completed')
+                ->count()
+            : 0;
 
         return view('dashboard', compact(
             'listings',
@@ -52,6 +60,7 @@ class DashboardController extends Controller
             'inquiries',
             'unreadEnquiries',
             'pendingOffers',
+            'activeOrders',
         ));
     }
 }

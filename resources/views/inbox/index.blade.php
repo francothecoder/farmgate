@@ -89,14 +89,27 @@
                                     @method('PATCH')
                                     <label for="offer-response-{{ $offer->id }}" class="sr-only">Optional note to supplier</label>
                                     <input id="offer-response-{{ $offer->id }}" name="response_message" maxlength="1000" placeholder="Optional note to supplier" class="rounded-xl border border-slate-200 px-3 py-2 text-sm">
-                                    <button name="status" value="accepted" class="rounded-xl bg-[#14532D] px-4 py-2 text-sm font-semibold text-white">Accept offer</button>
-                                    <button name="status" value="declined" class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">Decline</button>
+                                    <label for="fulfillment-method-{{ $offer->id }}" class="sr-only">Fulfillment method when accepting</label>
+                                    <select id="fulfillment-method-{{ $offer->id }}" name="fulfillment_method" class="rounded-xl border border-slate-200 px-3 py-2 text-sm">
+                                        <option value="collection">Buyer collects</option>
+                                        <option value="delivery">Seller delivers</option>
+                                    </select>
+                                    <label for="fulfillment-location-{{ $offer->id }}" class="sr-only">Delivery address or location</label>
+                                    <input id="fulfillment-location-{{ $offer->id }}" name="fulfillment_location" maxlength="255" placeholder="Delivery location (required for delivery)" class="rounded-xl border border-slate-200 px-3 py-2 text-sm">
+                                    @error('fulfillment_location')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                    @error('fulfillment_method')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                    <button name="status" value="accepted" class="rounded-xl bg-[#14532D] px-4 py-2 text-sm font-semibold text-white">Accept & create order</button>
+                                    <button name="status" value="declined" formnovalidate class="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700">Decline</button>
                                 </form>
+                                <p class="mt-2 text-xs text-slate-500">Accepting an offer creates an order with the agreed quantity and price. Payment is arranged directly between buyer and seller.</p>
+                            @endif
+                            @if($offer->order)
+                                <a href="{{ route('orders.index') }}" class="mt-4 inline-flex rounded-xl bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900">Track order #{{ $offer->order->id }} · {{ str_replace('_', ' ', ucfirst($offer->order->status)) }} →</a>
                             @endif
                             @if($offer->status === 'accepted')
                                 @if($offer->sellerReview)
                                     <p class="mt-4 rounded-xl bg-amber-50 p-3 text-sm font-semibold text-amber-900">Your review: {{ $offer->sellerReview->rating }} / 5</p>
-                                @else
+                                @elseif($offer->order?->status === 'completed')
                                     <form method="POST" action="{{ route('inbox.offers.review', $offer) }}" class="mt-4 grid gap-3 rounded-xl border border-emerald-100 bg-emerald-50/50 p-4 sm:grid-cols-[12rem_1fr_auto] sm:items-end">
                                         @csrf
                                         <div>
@@ -116,6 +129,8 @@
                                         </div>
                                         <button class="rounded-xl bg-[#14532D] px-4 py-2.5 text-sm font-semibold text-white">Submit review</button>
                                     </form>
+                                @else
+                                    <p class="mt-3 text-sm text-slate-500">You can review this supplier after the order is completed.</p>
                                 @endif
                             @endif
                         </article>
@@ -164,6 +179,9 @@
                                 </div>
                                 @if($offer->response_message)
                                     <p class="mt-3 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-900"><strong>Buyer:</strong> {{ $offer->response_message }}</p>
+                                @endif
+                                @if($offer->order)
+                                    <a href="{{ route('orders.index') }}" class="mt-3 inline-flex rounded-xl bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-900">Track order #{{ $offer->order->id }} →</a>
                                 @endif
                             </article>
                         @empty

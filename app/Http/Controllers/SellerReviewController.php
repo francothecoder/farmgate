@@ -16,6 +16,7 @@ class SellerReviewController extends Controller
             $buyerOffer->request()->where('user_id', $request->user()->id)->exists(),
             403,
         );
+        abort_unless($buyerOffer->order()->where('status', 'completed')->exists(), 409);
 
         $validated = $request->validate([
             'rating' => ['required', 'integer', 'between:1,5'],
@@ -25,7 +26,7 @@ class SellerReviewController extends Controller
         DB::transaction(function () use ($request, $buyerOffer, $validated): void {
             $offer = BuyerOffer::query()->lockForUpdate()->findOrFail($buyerOffer->id);
 
-            abort_unless($offer->status === 'accepted', 409);
+            abort_unless($offer->order()->where('status', 'completed')->exists(), 409);
 
             if ($offer->sellerReview()->exists()) {
                 throw ValidationException::withMessages([

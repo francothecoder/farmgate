@@ -116,6 +116,21 @@ class SellerTrustTest extends TestCase
         $this->assertDatabaseCount('seller_reviews', 0);
     }
 
+    public function test_review_is_refused_until_the_accepted_order_is_completed(): void
+    {
+        [$buyer, , $offer] = $this->acceptedOffer();
+        $offer->order()->update([
+            'status' => 'confirmed',
+            'completed_at' => null,
+        ]);
+
+        $this->actingAs($buyer)->post(route('inbox.offers.review', $offer), [
+            'rating' => 5,
+        ])->assertStatus(409);
+
+        $this->assertDatabaseCount('seller_reviews', 0);
+    }
+
     public function test_member_can_report_an_approved_listing_once_for_admin_moderation(): void
     {
         $reporter = User::factory()->create();
@@ -250,6 +265,19 @@ class SellerTrustTest extends TestCase
             'price' => 25000,
             'status' => $status,
         ]);
+
+        if ($status === 'accepted') {
+            $offer->order()->create([
+                'buyer_id' => $buyer->id,
+                'seller_id' => $supplier->id,
+                'quantity' => $offer->quantity,
+                'unit' => 'bags',
+                'total_price' => $offer->price,
+                'fulfillment_method' => 'collection',
+                'status' => 'completed',
+                'completed_at' => now(),
+            ]);
+        }
 
         return [$buyer, $supplier, $offer];
     }

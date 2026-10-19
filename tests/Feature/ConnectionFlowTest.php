@@ -165,12 +165,26 @@ class ConnectionFlowTest extends TestCase
         $this->actingAs($buyer)->patch(route('inbox.offers.respond', $offer), [
             'status' => 'accepted',
             'response_message' => 'Please arrange collection on Friday.',
+            'fulfillment_method' => 'collection',
         ])->assertRedirect();
 
         $this->assertDatabaseHas('buyer_offers', [
             'id' => $offer->id,
             'status' => 'accepted',
             'response_message' => 'Please arrange collection on Friday.',
+        ]);
+        $this->assertDatabaseHas('orders', [
+            'buyer_offer_id' => $offer->id,
+            'buyer_id' => $buyer->id,
+            'seller_id' => $supplier->id,
+            'status' => 'confirmed',
+            'fulfillment_method' => 'collection',
+            'total_price' => 25000,
+        ]);
+        $this->assertDatabaseHas('order_updates', [
+            'order_id' => $offer->order->id,
+            'status' => 'confirmed',
+            'user_id' => $buyer->id,
         ]);
         $this->assertNotNull($offer->fresh()->responded_at);
         $this->actingAs($supplier)->get(route('inbox.index'))
@@ -179,6 +193,7 @@ class ConnectionFlowTest extends TestCase
 
         $this->actingAs($buyer)->patch(route('inbox.offers.respond', $offer), [
             'status' => 'declined',
+            'fulfillment_method' => 'collection',
         ])->assertStatus(409);
         $this->assertDatabaseHas('buyer_offers', ['id' => $offer->id, 'status' => 'accepted']);
     }

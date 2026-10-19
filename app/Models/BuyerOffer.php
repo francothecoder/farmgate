@@ -32,4 +32,9 @@ class BuyerOffer extends Model
     {
         return $this->hasOne(SellerReview::class, 'buyer_offer_id');
     }
+
+    public function order(): HasOne
+    {
+        return $this->hasOne(Order::class);
+    }
 }
