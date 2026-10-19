@@ -24,6 +24,13 @@
         </div>
 
         <div>
+            <x-input-label for="phone" :value="__('Phone number (for WhatsApp contact)')" />
+            <x-text-input id="phone" name="phone" type="tel" class="mt-1 block w-full" :value="old('phone', $user->phone)" autocomplete="tel" placeholder="+260 955 123 456" />
+            <p class="mt-1 text-sm text-gray-600">{{ __('Add your mobile number with country code so buyers can contact you directly from your listings.') }}</p>
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+        <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />

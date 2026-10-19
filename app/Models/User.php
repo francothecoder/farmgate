@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -31,6 +32,29 @@ class User extends Authenticatable
     public function buyerOffers(): HasMany
     {
         return $this->hasMany(BuyerOffer::class, 'user_id');
+    }
+
+    public function getWhatsAppUrlAttribute(): ?string
+    {
+        $digits = preg_replace('/\D+/', '', $this->phone ?? '');
+
+        if (! $digits) {
+            return null;
+        }
+
+        if (Str::startsWith($digits, '00')) {
+            $digits = substr($digits, 2);
+        } elseif (Str::startsWith($digits, '0')) {
+            $digits = '260'.substr($digits, 1);
+        } elseif (strlen($digits) === 9) {
+            $digits = '260'.$digits;
+        }
+
+        if (strlen($digits) < 10 || strlen($digits) > 15) {
+            return null;
+        }
+
+        return 'https://wa.me/'.$digits.'?text='.rawurlencode('Hello, I found your listing on FarmGate and would like to know more.');
     }
 
     protected $fillable = [

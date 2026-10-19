@@ -25,14 +25,28 @@
                 <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <h3 class="text-lg font-bold text-slate-900">Submit an offer</h3>
                     @auth
-                        <form method="POST" action="{{ route('buyer-requests.offers.store', $buyerRequest) }}" class="mt-4 space-y-3">
-                            @csrf
-                            <input type="number" name="quantity" placeholder="Offered quantity" class="w-full rounded-xl border border-slate-200 px-3 py-2" required>
-                            <input type="number" name="price" placeholder="Offered price" class="w-full rounded-xl border border-slate-200 px-3 py-2" required>
-                            <input type="date" name="availability_date" class="w-full rounded-xl border border-slate-200 px-3 py-2">
-                            <textarea name="message" rows="4" placeholder="Message for the buyer" class="w-full rounded-xl border border-slate-200 px-3 py-2"></textarea>
-                            <button type="submit" class="w-full rounded-xl bg-[#14532D] px-4 py-2 text-sm font-semibold text-white">Send offer</button>
-                        </form>
+                        @if(auth()->id() !== $buyerRequest->user_id)
+                            <form method="POST" action="{{ route('buyer-requests.offers.store', $buyerRequest) }}" class="mt-4 space-y-3">
+                                @csrf
+                                <label for="offer-quantity" class="block text-sm font-medium text-slate-700">Quantity available</label>
+                                <input id="offer-quantity" type="number" name="quantity" min="1" step="0.01" value="{{ old('quantity') }}" placeholder="e.g. 50 bags" class="w-full rounded-xl border border-slate-200 px-3 py-2" required>
+                                @error('quantity')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                <label for="offer-price" class="block text-sm font-medium text-slate-700">Total price (ZMW)</label>
+                                <input id="offer-price" type="number" name="price" min="0" step="0.01" value="{{ old('price') }}" placeholder="Your total offer" class="w-full rounded-xl border border-slate-200 px-3 py-2" required>
+                                @error('price')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                <label for="availability-date" class="block text-sm font-medium text-slate-700">Ready from</label>
+                                <input id="availability-date" type="date" name="availability_date" min="{{ now()->toDateString() }}" value="{{ old('availability_date') }}" class="w-full rounded-xl border border-slate-200 px-3 py-2">
+                                @error('availability_date')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                <label for="offer-message" class="block text-sm font-medium text-slate-700">Message to buyer</label>
+                                <textarea id="offer-message" name="message" rows="4" maxlength="500" placeholder="Describe your produce and delivery options" class="w-full rounded-xl border border-slate-200 px-3 py-2">{{ old('message') }}</textarea>
+                                @error('message')<p class="text-sm text-rose-700">{{ $message }}</p>@enderror
+                                <button type="submit" class="w-full rounded-xl bg-[#14532D] px-4 py-3 text-sm font-semibold text-white">Send offer to buyer</button>
+                                <a href="{{ route('inbox.index') }}" class="block text-center text-sm font-semibold text-[#14532D]">Track offers in inbox</a>
+                            </form>
+                        @else
+                            <p class="mt-3 text-sm text-slate-600">This is your request. View supplier responses in your inbox.</p>
+                            <a href="{{ route('inbox.index') }}" class="mt-3 inline-block font-semibold text-[#14532D]">View offers →</a>
+                        @endif
                     @else
                         <a href="{{ route('login') }}" class="inline-block rounded-xl bg-[#14532D] px-4 py-2 text-sm font-semibold text-white">Login to submit an offer</a>
                     @endauth

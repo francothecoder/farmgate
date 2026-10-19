@@ -25,6 +25,23 @@
                     <p class="mt-2"><strong>Location:</strong> {{ $business->display_address }}</p>
                 </div>
             </div>
+
+            @auth
+                @if(auth()->id() !== $business->user_id)
+                    <form method="POST" action="{{ route('enquiries.store') }}" class="mt-8 rounded-2xl border border-emerald-100 bg-emerald-50/60 p-5">
+                        @csrf
+                        <input type="hidden" name="related_type" value="business">
+                        <input type="hidden" name="related_id" value="{{ $business->id }}">
+                        <label for="business-message" class="font-semibold text-slate-900">Contact this business</label>
+                        <p class="mt-1 text-sm text-slate-600">Ask about products, services, or how to work together.</p>
+                        <textarea id="business-message" name="message" rows="3" required maxlength="1000" class="mt-3 w-full rounded-xl border border-slate-200 p-3" placeholder="Write a message"></textarea>
+                        @error('message')<p class="mt-1 text-sm text-rose-700">{{ $message }}</p>@enderror
+                        <button class="mt-3 rounded-full bg-[#14532D] px-5 py-3 text-sm font-semibold text-white">Send business enquiry</button>
+                    </form>
+                @endif
+            @else
+                <a href="{{ route('login') }}" class="mt-8 inline-flex rounded-full bg-[#14532D] px-5 py-3 text-sm font-semibold text-white">Login to contact this business</a>
+            @endauth
         </div>
     </section>
 @endsection

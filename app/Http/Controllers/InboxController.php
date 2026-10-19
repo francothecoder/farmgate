@@ -54,7 +54,11 @@ class InboxController extends Controller
 
     public function respondToOffer(Request $request, BuyerOffer $buyerOffer): RedirectResponse
     {
-        abort_unless((int) $buyerOffer->request()->value('user_id') === (int) $request->user()->id, 403);
+        abort_unless(
+            $buyerOffer->request()->where('user_id', $request->user()->id)->exists(),
+            403,
+        );
+        abort_unless($buyerOffer->status === 'submitted', 409);
 
         $validated = $request->validate([
             'status' => ['required', 'in:accepted,declined'],

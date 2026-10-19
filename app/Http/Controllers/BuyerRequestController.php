@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\BuyerOffer;
 use App\Models\BuyerRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
@@ -32,21 +31,21 @@ class BuyerRequestController extends Controller
     public function storeOffer(Request $request, BuyerRequest $buyerRequest)
     {
         abort_unless($buyerRequest->status === 'approved', 404);
+        abort_if((int) $buyerRequest->user_id === (int) $request->user()->id, 403);
 
-        $request->validate([
+        $validated = $request->validate([
             'quantity' => ['required', 'numeric', 'min:1'],
             'price' => ['required', 'numeric', 'min:0'],
-            'availability_date' => ['nullable', 'date'],
+            'availability_date' => ['nullable', 'date', 'after_or_equal:today'],
             'message' => ['nullable', 'string', 'max:500'],
         ]);
 
-        BuyerOffer::create([
+        $request->user()->buyerOffers()->create([
             'buyer_request_id' => $buyerRequest->id,
-            'user_id' => Auth::id(),
-            'quantity' => $request->quantity,
-            'price' => $request->price,
-            'availability_date' => $request->availability_date,
-            'message' => $request->message,
+            'quantity' => $validated['quantity'],
+            'price' => $validated['price'],
+            'availability_date' => $validated['availability_date'] ?? null,
+            'message' => $validated['message'] ?? null,
             'status' => 'submitted',
         ]);
 

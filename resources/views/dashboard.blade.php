@@ -12,6 +12,7 @@
                 @if(auth()->user()->role === 'admin')
                     <a href="{{ route('admin.dashboard') }}" class="rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white">Admin console</a>
                 @endif
+                <a href="{{ route('inbox.index') }}" class="rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold text-white">Open inbox</a>
             </div>
         </div>
 
@@ -19,6 +20,11 @@
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h3 class="text-lg font-bold">My listings</h3><p class="mt-3 text-3xl font-bold text-[#14532D]">{{ $listings->count() }}</p></div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h3 class="text-lg font-bold">Buyer requests</h3><p class="mt-3 text-3xl font-bold text-[#14532D]">{{ $requests->count() }}</p></div>
             <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><h3 class="text-lg font-bold">Saved listings</h3><p class="mt-3 text-3xl font-bold text-[#14532D]">{{ $savedListings->count() }}</p></div>
+            <a href="{{ route('inbox.index') }}" class="rounded-2xl border border-orange-200 bg-orange-50 p-5 shadow-sm transition hover:border-orange-400">
+                <h3 class="text-lg font-bold text-slate-900">Action needed</h3>
+                <p class="mt-3 text-3xl font-bold text-orange-700">{{ $unreadEnquiries + $pendingOffers }}</p>
+                <p class="mt-1 text-sm text-slate-600">{{ $unreadEnquiries }} enquiries · {{ $pendingOffers }} offers to review</p>
+            </a>
         </div>
 
         <div class="mt-8 grid gap-6 lg:grid-cols-2">
@@ -34,9 +40,13 @@
                 <h2 class="text-xl font-bold text-slate-900">Latest enquiries</h2>
                 <ul class="mt-4 space-y-3">
                     @foreach($inquiries as $enquiry)
-                        <li class="border-b border-slate-100 pb-2"><p class="font-medium text-slate-900">{{ $enquiry->subject }}</p><p class="text-sm text-slate-500">{{ Str::limit($enquiry->message, 80) }}</p></li>
+                        <li class="border-b border-slate-100 pb-2">
+                            <p class="font-medium text-slate-900">{{ $enquiry->subject }}</p>
+                            <p class="text-sm text-slate-500">{{ $enquiry->user_id === auth()->id() ? 'To '.$enquiry->recipient?->name : 'From '.$enquiry->sender?->name }} · {{ Str::limit($enquiry->message, 80) }}</p>
+                        </li>
                     @endforeach
                 </ul>
+                <a href="{{ route('inbox.index') }}" class="mt-4 inline-flex text-sm font-semibold text-[#14532D]">Open your inbox →</a>
             </div>
         </div>
     </section>

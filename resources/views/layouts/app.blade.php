@@ -38,6 +38,7 @@
                         </form>
 
                         @auth
+                            <a href="{{ route('inbox.index') }}" class="hidden text-sm font-semibold text-[#14532D] sm:inline">Inbox</a>
                             <a href="{{ route('dashboard') }}" class="rounded-full bg-[#14532D] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0f3c26]">Dashboard</a>
                         @else
                             <a href="{{ route('login') }}" class="text-sm font-medium text-slate-700 hover:text-[#14532D]">Login</a>

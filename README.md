@@ -103,6 +103,8 @@ php artisan schedule:work
 - Admins can manage Knowledge Hub drafts, review submissions, publication state, Markdown body, tags, SEO metadata, featured status, and cover images under `/admin/articles`.
 - General site name, tagline, email, and phone settings can be edited under `/admin/settings`; the public layout uses the saved values.
 - The homepage carousel automatically features images from approved listings, published articles, and approved businesses. It includes manual navigation, dot controls, keyboard arrows, pause/play, and respects reduced-motion preferences.
+- Buyers can contact listing owners on WhatsApp when the owner has provided a valid phone number, send an in-platform enquiry, and follow replies in `/inbox`. Buyers can review offers on their requests and accept or decline them from their inbox.
+- Seller phone numbers can be added at registration or updated from the profile page. WhatsApp contact links are only shown when a usable number is present.
 - Local public files use Laravel's `public` disk. Run `php artisan storage:link` after installation; configure an S3-compatible public disk for horizontally scaled production deployments.
 
 ## 10. Queue and scheduler configuration

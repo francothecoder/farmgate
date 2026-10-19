@@ -16,7 +16,8 @@
 
         <div class="mt-4">
             <x-input-label for="phone" :value="__('Phone Number')" />
-            <x-text-input id="phone" class="block mt-1 w-full" type="tel" name="phone" :value="old('phone')" />
+            <x-text-input id="phone" class="block mt-1 w-full" type="tel" name="phone" :value="old('phone')" placeholder="+260 955 123 456" autocomplete="tel" />
+            <p class="mt-1 text-sm text-gray-600">{{ __('Optional. Add your WhatsApp number so buyers can contact you from your product listings.') }}</p>
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
