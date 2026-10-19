@@ -13,17 +13,17 @@
     </head>
     <body class="bg-[#F8FAF9] text-slate-900 antialiased">
         <div class="min-h-screen">
-            <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md">
+            <header class="sticky top-0 z-50 border-b-4 border-b-orange-400 border-slate-200 bg-white/95 shadow-sm backdrop-blur-md">
                 <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
                     <a href="{{ route('home') }}" class="flex items-center gap-3">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#14532D] text-lg font-bold text-white">F</div>
+                        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#14532D] to-[#16A34A] text-lg font-bold text-white shadow-sm ring-2 ring-orange-300">F</div>
                         <div>
-                            <p class="text-lg font-bold text-[#14532D]">{{ $siteSettings['site_name'] ?? 'FarmGate' }}</p>
+                            <p class="text-lg font-bold tracking-tight text-[#14532D]">{{ $siteSettings['site_name'] ?? 'FarmGate' }}</p>
                             <p class="text-[10px] uppercase tracking-[0.18em] text-slate-500">Zambia</p>
                         </div>
                     </a>
 
-                    <nav class="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
+                    <nav class="hidden items-center gap-5 text-sm font-medium text-slate-700 xl:flex">
                         <a href="{{ route('home') }}" class="hover:text-[#14532D]">Home</a>
                         <a href="{{ route('listings.index') }}" class="hover:text-[#14532D]">Marketplace</a>
                         <a href="{{ route('buyer-requests.index') }}" class="hover:text-[#14532D]">Buyer Requests</a>
@@ -32,16 +32,16 @@
                     </nav>
 
                     <div class="flex items-center gap-3">
-                        <form method="GET" action="{{ route('listings.index') }}" class="hidden max-w-xs items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-2 lg:flex">
+                        <form method="GET" action="{{ route('listings.index') }}" class="hidden max-w-xs items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-2 2xl:flex">
                             <input type="search" name="search" placeholder="Search products, guides..." class="w-44 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400" value="{{ request('search') }}">
                             <button type="submit" class="ml-2 text-[#14532D]">Search</button>
                         </form>
 
                         @auth
-                            <a href="{{ route('dashboard') }}" class="rounded-full bg-[#14532D] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0f3c26]">Dashboard</a>
+                            <a href="{{ route('dashboard') }}" class="rounded-full bg-[#14532D] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0f3c26]">Dashboard</a>
                         @else
                             <a href="{{ route('login') }}" class="text-sm font-medium text-slate-700 hover:text-[#14532D]">Login</a>
-                            <a href="{{ route('register') }}" class="rounded-full bg-[#16A34A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#15803d]">Register</a>
+                            <a href="{{ route('register') }}" class="rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-600">Join FarmGate</a>
                         @endauth
                     </div>
                 </div>
